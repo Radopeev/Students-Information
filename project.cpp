@@ -4,6 +4,23 @@
 #include <vector>
 #include <cstring>
 #include <cmath>
+using namespace std;
+void addingMember(fstream &myFile, const string& group, const string& name, const string& facultyNumber){
+    myFile.open(group,ios::app);
+    if(myFile.is_open()){
+        myFile<<"Name:"<<name<<" ";
+        myFile<<"FN:"<<facultyNumber;
+        myFile.close();
+    }
+}
+void addingSubjectsAndGrades(fstream &myFile,const string& group,const string& subjects,const string& grades){
+    myFile.open(group,ios::app);
+    if(myFile.is_open()){
+        myFile<<" "<<"Subject:"<<subjects<<" ";
+        myFile<<"Grade:"<<grades;
+        myFile.close();
+    }
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
