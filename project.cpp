@@ -42,6 +42,76 @@ void removeMember(fstream &myFile,const string& group,const string& facultyNumbe
     }
     delete []filename;
 }
+void fnNumberAssignment(fstream &myFile,const string& group,vector<string> &fnNumbers){
+    myFile.open(group,ios::in);
+    string line;
+    if(myFile.is_open()){
+        while (getline (myFile,line)) {
+            string facultyNumber=line.substr(line.find("FN:")+3,10);
+            fnNumbers.push_back(facultyNumber);
+        }
+    }
+    myFile.close();
+}
+void fnNumberSortAscending(vector<string> &fnNumbers){
+    for(int i=0;i<fnNumbers.size()-1;i++){
+        for(int j=0;j<fnNumbers.size()-i-1;j++) {
+            if (fnNumbers[j] > fnNumbers[j+ 1]) {
+                string temp;
+                temp = fnNumbers[j];
+                fnNumbers[j] = fnNumbers[j + 1];
+                fnNumbers[j+1] = temp;
+            }
+        }
+    }
+}
+void fnNumberSortDescending(vector<string> &fnNumbers){
+    for(int i=0;i<fnNumbers.size()-1;i++){
+        for(int j=0;j<fnNumbers.size()-i-1;j++) {
+            if (fnNumbers[j] < fnNumbers[j+ 1]) {
+                string temp;
+                temp = fnNumbers[j];
+                fnNumbers[j] = fnNumbers[j + 1];
+                fnNumbers[j+1] = temp;
+            }
+        }
+    }
+}
+void sortingByFacultyNumber(fstream &myFile,const string& group,int order) {
+    char *filename = new char[group.length() + 1];
+    strcpy(filename, group.c_str());\
+    string line,lineForPrint;
+    fstream temp;
+    vector<string> fnNumbers;
+    fnNumberAssignment(myFile,group,fnNumbers);
+    temp.open("temp",ios::out);
+    if(order==1){
+        fnNumberSortAscending(fnNumbers);
+    }
+    else if(order==2){
+        fnNumberSortDescending(fnNumbers);
+    }
+    for(auto & fnNumber : fnNumbers){
+        myFile.open(group,ios::in);
+        if(myFile.is_open()) {
+            while (getline(myFile, line)) {
+                if (line.find(fnNumber) != string::npos) {
+                    temp << line << endl;
+                }
+            }
+            myFile.close();
+        }
+    }
+    temp.close();
+    remove(filename);
+    rename("temp", filename);
+    myFile.open(filename, ios::in);
+    while(getline(myFile,lineForPrint)){
+        cout<<lineForPrint<<endl;
+    }
+    cout<<endl;
+    delete []filename;
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
