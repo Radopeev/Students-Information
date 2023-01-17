@@ -194,6 +194,109 @@ void sortingByAverageScore(fstream &myFile,const string& group,int order) {
     cout<<endl;
     delete []filename;
 }
+void mergedGroup(fstream &mergedGroups,vector<string> groups,int n){
+    mergedGroups.open("MergedGroups",ios::app);
+    string line;
+    while(n>=0){
+        fstream temp;
+        temp.open(groups[n],ios::in);
+        if(temp.is_open()) {
+            while (getline(temp, line)) {
+                mergedGroups << line << endl;
+            }
+        }
+        temp.close();
+        n--;
+    }
+    mergedGroups.close();
+}
+void avgScoresAssignmentForMergedGroups(fstream &mergedGroups,vector<double> &avgScores){
+    mergedGroups.open("MergedGroups",ios::in);
+    string line;
+    if(mergedGroups.is_open()){
+        while (getline (mergedGroups,line)) {
+            double avgScore=averageScore(line);
+            avgScores.push_back(avgScore);
+        }
+    }
+    mergedGroups.close();
+}
+void sortByAverageScoreAndVisualize(fstream &mergedGroups,int order){
+    string line,lineForPrint;
+    fstream temp;
+    vector<double> avgScores;
+    avgScoresAssignmentForMergedGroups(mergedGroups,avgScores);
+    temp.open("temp",ios::out);
+    if(order==1){
+        avgScoresSortAscending(avgScores);
+    }
+    else if(order==2){
+        avgScoresSortDescending(avgScores);
+    }
+    for(double i : avgScores){
+        mergedGroups.open("MergedGroups",ios::in);
+        if(mergedGroups.is_open()) {
+            while (getline(mergedGroups, line)) {
+                double avgScore= averageScore(line);
+                if (i==avgScore) {
+                    temp << line << endl;
+                }
+            }
+            mergedGroups.close();
+        }
+    }
+    temp.close();
+    remove("MergedGroups");
+    rename("temp", "MergedGroups");
+    mergedGroups.open("MergedGroups", ios::in);
+    while(getline(mergedGroups,lineForPrint)){
+        cout<<lineForPrint<<endl;
+    }
+    cout<<endl;
+}
+void fnNumbersAssignmentForMergedGroups(fstream &mergedGroups,vector<string> &fnNumbers){
+    mergedGroups.open("MergedGroups",ios::in);
+    string line;
+    if(mergedGroups.is_open()){
+        while (getline (mergedGroups,line)) {
+            string facultyNumber=line.substr(line.find("FN:")+3,10);
+            fnNumbers.push_back(facultyNumber);
+        }
+    }
+    mergedGroups.close();
+}
+void sortByFacultyNumberAndVisualize(fstream &mergedGroups,int order){
+    string line,lineForPrint;
+    fstream temp;
+    vector<string> fnNumbers;
+    fnNumbersAssignmentForMergedGroups(mergedGroups,fnNumbers);
+    temp.open("temp",ios::out);
+    if(order==1){
+        fnNumberSortAscending(fnNumbers);
+    }
+    else if(order==2){
+        fnNumberSortDescending(fnNumbers);
+    }
+    for(auto & fnNumber : fnNumbers){
+        mergedGroups.open("MergedGroups",ios::in);
+        if(mergedGroups.is_open()) {
+            while (getline(mergedGroups, line)) {
+                if (line.find(fnNumber) != string::npos) {
+                    temp << line << endl;
+                }
+            }
+            mergedGroups.close();
+        }
+    }
+    temp.close();
+    remove("MergedGroups");
+    rename("temp", "MergedGroups");
+    mergedGroups.open("MergedGroups", ios::in);
+    while(getline(mergedGroups,lineForPrint)){
+        cout<<lineForPrint<<endl;
+    }
+    cout<<endl;
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
