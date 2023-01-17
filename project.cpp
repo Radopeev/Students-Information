@@ -112,6 +112,88 @@ void sortingByFacultyNumber(fstream &myFile,const string& group,int order) {
     cout<<endl;
     delete []filename;
 }
+double averageScore(string line){
+    double avgScore=0,grades=0;
+    while (!line.empty()) {
+        string line1 = line.substr(line.find("Grade:") + 6, 4);
+        avgScore+= stod(line1);
+        line = line.substr(line.find(line1) + 4, line.length());
+        grades++;
+    }
+    avgScore= avgScore/grades;
+    return ceil(avgScore * 100.0) / 100.0;
+}
+void avgScoresAssignment(fstream &myFile,const string& group,vector<double> &avgScores){
+    myFile.open(group,ios::in);
+    string line;
+    if(myFile.is_open()){
+        while (getline (myFile,line)) {
+            double avgScore=averageScore(line);
+            avgScores.push_back(avgScore);
+        }
+    }
+    myFile.close();
+}
+void avgScoresSortAscending(vector<double> &avgScores){
+    for(int i=0;i<avgScores.size()-1;i++){
+        for(int j=0;j<avgScores.size()-i-1;j++) {
+            if (avgScores[j] > avgScores[j+ 1]) {
+                double temp;
+                temp = avgScores[j];
+                avgScores[j] = avgScores[j + 1];
+                avgScores[j+1] = temp;
+            }
+        }
+    }
+}
+void avgScoresSortDescending(vector<double> &avgScores){
+    for(int i=0;i<avgScores.size()-1;i++){
+        for(int j=0;j<avgScores.size()-i-1;j++) {
+            if (avgScores[j] < avgScores[j+ 1]) {
+                double temp;
+                temp = avgScores[j];
+                avgScores[j] = avgScores[j + 1];
+                avgScores[j+1] = temp;
+            }
+        }
+    }
+}
+void sortingByAverageScore(fstream &myFile,const string& group,int order) {
+    char *filename = new char[group.length() + 1];
+    strcpy(filename, group.c_str());
+    string line,lineForPrint;
+    fstream temp;
+    vector<double> avgScores;
+    avgScoresAssignment(myFile,group,avgScores);
+    temp.open("temp",ios::out);
+    if(order==1){
+        avgScoresSortAscending(avgScores);
+    }
+    else if(order==2){
+        avgScoresSortDescending(avgScores);
+    }
+    for(double i : avgScores){
+        myFile.open(group,ios::in);
+        if(myFile.is_open()) {
+            while (getline(myFile, line)) {
+                double avgScore= averageScore(line);
+                if (i==avgScore) {
+                    temp << line << endl;
+                }
+            }
+            myFile.close();
+        }
+    }
+    temp.close();
+    remove(filename);
+    rename("temp", filename);
+    myFile.open(filename, ios::in);
+    while(getline(myFile,lineForPrint)){
+        cout<<lineForPrint<<endl;
+    }
+    cout<<endl;
+    delete []filename;
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
