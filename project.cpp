@@ -21,6 +21,27 @@ void addingSubjectsAndGrades(fstream &myFile,const string& group,const string& s
         myFile.close();
     }
 }
+void removeMember(fstream &myFile,const string& group,const string& facultyNumberToRemove){
+    myFile.open(group,ios::in);
+    char *filename = new char[group.length() + 1];
+    strcpy(filename, group.c_str());
+    string line;
+    fstream temp;
+    temp.open("temp.txt",ios::out);
+    if(myFile.is_open()) {
+        while (getline(myFile, line)) {
+            if(line.find(facultyNumberToRemove)==string::npos)
+            {
+                temp << line << endl;
+            }
+        }
+        myFile.close();
+        temp.close();
+        remove(filename);
+        rename("temp.txt", filename);
+    }
+    delete []filename;
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
