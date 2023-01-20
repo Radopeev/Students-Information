@@ -121,8 +121,11 @@ void sortingByFacultyNumber(fstream &myFile,const string& group,int order) {
     remove(filename);
     rename("temp", filename);
     myFile.open(filename, ios::in);
-    while(getline(myFile,lineForPrint)){
-        cout<<lineForPrint<<endl;
+    if(myFile.is_open()) {
+        while (getline(myFile, lineForPrint)) {
+            cout << lineForPrint << endl;
+        }
+        myFile.close();
     }
     cout<<endl;
     delete []filename;
@@ -203,8 +206,11 @@ void sortingByAverageScore(fstream &myFile,const string& group,int order) {
     remove(filename);
     rename("temp", filename);
     myFile.open(filename, ios::in);
-    while(getline(myFile,lineForPrint)){
-        cout<<lineForPrint<<endl;
+    if(myFile.is_open()) {
+        while (getline(myFile, lineForPrint)) {
+            cout << lineForPrint << endl;
+        }
+        myFile.close();
     }
     cout<<endl;
     delete []filename;
@@ -264,21 +270,25 @@ void sortByAverageScoreAndVisualize(fstream &mergedGroups,int order){
     remove("MergedGroups");
     rename("temp", "MergedGroups");
     mergedGroups.open("MergedGroups", ios::in);
-    while(getline(mergedGroups,lineForPrint)){
-        cout<<lineForPrint<<endl;
+    if(mergedGroups.is_open())
+    {
+        while (getline(mergedGroups, lineForPrint)) {
+            cout << lineForPrint << endl;
+        }
+        mergedGroups.close();
     }
     cout<<endl;
 }
 void fnNumbersAssignmentForMergedGroups(fstream &mergedGroups,vector<string> &fnNumbers){
     mergedGroups.open("MergedGroups",ios::in);
     string line;
-    if(mergedGroups.is_open()){
-        while (getline (mergedGroups,line)) {
-            string facultyNumber=line.substr(line.find("FN:")+3,10);
+    if(mergedGroups.is_open()) {
+        while (getline(mergedGroups, line)) {
+            string facultyNumber = line.substr(line.find("FN:") + 3, 10);
             fnNumbers.push_back(facultyNumber);
         }
+        mergedGroups.close();
     }
-    mergedGroups.close();
 }
 void sortByFacultyNumberAndVisualize(fstream &mergedGroups,int order){
     string line,lineForPrint;
@@ -307,8 +317,11 @@ void sortByFacultyNumberAndVisualize(fstream &mergedGroups,int order){
     remove("MergedGroups");
     rename("temp", "MergedGroups");
     mergedGroups.open("MergedGroups", ios::in);
-    while(getline(mergedGroups,lineForPrint)){
-        cout<<lineForPrint<<endl;
+    if(mergedGroups.is_open()) {
+        while (getline(mergedGroups, lineForPrint)) {
+            cout << lineForPrint << endl;
+        }
+        mergedGroups.close();
     }
     cout<<endl;
 }
