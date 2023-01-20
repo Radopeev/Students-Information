@@ -297,6 +297,35 @@ void sortByFacultyNumberAndVisualize(fstream &mergedGroups,int order){
     }
     cout<<endl;
 }
+bool facultyNumberValidator(string facultyNumber){
+    bool isFirstNumberDigit,isThereMIinIt,AreThereOnlyDigits;
+    if(isdigit(facultyNumber[0])){
+        isFirstNumberDigit= true;
+    }
+    if(facultyNumber.find("MI")==1){
+        isThereMIinIt= true;
+    }
+    for(int i=3;i<10;i++){
+        if(isdigit(facultyNumber[i])){
+            AreThereOnlyDigits= true;
+        }else {
+            AreThereOnlyDigits= false;
+        }
+    }
+    if(isFirstNumberDigit && isThereMIinIt && AreThereOnlyDigits){
+        return true;
+    }else {
+        return false;
+    }
+}
+bool gradesValidator(string grades){
+    if(isdigit(grades[0])== true && grades[1]=='.' && isdigit(grades[2])== true && isdigit(grades[3])== true){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 int main() {
     int options=0,countOfSubjects=0;
     double numOfDisciplines;
@@ -310,28 +339,44 @@ int main() {
             fstream myFile;
             cout<<"In which group you want to include new student(1-8)\n"<<flush;
             cin>>group;
-            if(group>"8"){
-                cout<<"You entered incorrect input! Please try again!\n";
+            if(!isdigit(group[0]) || (stoi(group)<1 || stoi(group)>8)){
+                cout<<"You entered incorrect input! Please try again.\n";
+                cout<<endl;
                 continue;
             }
             cin.ignore();
             cout<<"Name:";
             getline(cin,name);
-            cout<<"Faculty Number:";
+            cout<<"Faculty Number(*MI*******):";
             cin>>facultyNumber;
+            if(facultyNumber.length()>10){
+                cout<<"You entered incorrect input! Please try again.\n";
+                cout<<endl;
+                continue;
+            }
+            if(!facultyNumberValidator(facultyNumber)){
+                cout<<"You entered incorrect input! Please try again.\n";
+                cout<<endl;
+                continue;
+            }
             cin.ignore();
             cout<<"Number of disciplines you would like to add(1-10):";
             cin>>numOfDisciplines;
             if(numOfDisciplines>10){
-                cout<<"You entered incorrect input!Please try again\n";
+                cout<<"You entered incorrect input!Please try again.\n";
+                cout<<endl;
                 continue;
             }
             addingMember(myFile,group,name,facultyNumber);
+            cout<<"Enter your subjects and grades(2-6):\n";
             while(countOfSubjects<numOfDisciplines){
                 cin>>subjects;
                 cin>>grades;
-                if(grades.length()!=4){
-                    cout<<"You entered incorrect input! Please try again.\n";
+                bool valid= gradesValidator(grades);
+                double grade=stod(grades);
+                if(grades.length()!=4 || !valid || (grade<2.00 || grade>6.00)){
+                    cout<<"You entered incorrect input!Тhe grades need to be in the format *.**(*-number). Please try again.\n";
+                    cout<<endl;
                     continue;
                 }
                 countOfSubjects++;
@@ -346,12 +391,18 @@ int main() {
             string facultyNumberToRemove;
             cout << "From which group is the student you want to remove\n";
             cin >> group;
-            if(group>"8"){
+            if(!isdigit(group[0]) || (stoi(group)<1 || stoi(group)>8)){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             cout << "Which student would you like to remove(by FN):\n";
             cin >> facultyNumberToRemove;
+            if(!facultyNumberValidator(facultyNumberToRemove)){
+                cout<<"You entered incorrect input! Please try again\n";
+                cout<<endl;
+                continue;
+            }
             fstream myFile;
             removeMember(myFile,group,facultyNumberToRemove);
         }
@@ -359,20 +410,23 @@ int main() {
             int order,sortingMethod;
             cout<<"Which group would would you like to sort\n";
             cin>>group;
-            if(group>"8"){
+            if(!isdigit(group[0]) || (stoi(group)<1 || stoi(group)>8)){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             cout<<"In what order would you like to be sorted(Ascending[1] | Descending[2])\n";
             cin>>order;
             if(order>2){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             cout<<"How would you like to sort(Average score[1] | Faculty number[2])\n";
             cin>>sortingMethod;
             if(sortingMethod>2){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             if(sortingMethod==1){
@@ -392,13 +446,15 @@ int main() {
             cin>>numOfGroups;
             if(numOfDisciplines>8){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             while(n<numOfGroups){
                 cout<<"Enter group:\n";
                 cin>>g;
-                if(g>"8"){
+                if(!isdigit(g[0]) || (stoi(g)<1 || stoi(g)>8)){
                     cout<<"You entered incorrect input! Please try again!\n";
+                    cout<<endl;
                     continue;
                 }
                 groups.push_back(g);
@@ -409,12 +465,14 @@ int main() {
             cin>>order;
             if(order>2){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             cout<<"How would you like to sort and visualize them(AverageScore[1] or Faculty Number[2]):\n";
             cin>>sortingMethod;
             if(sortingMethod>2){
                 cout<<"You entered incorrect input! Please try again!\n";
+                cout<<endl;
                 continue;
             }
             if(sortingMethod==1){
