@@ -1,0 +1,3 @@
+C:/Users/rados/CLionProjects/Students information project/cmake-build-debug/CMakeFiles/Students_information_project.dir
+C:/Users/rados/CLionProjects/Students information project/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/rados/CLionProjects/Students information project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
