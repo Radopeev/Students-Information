@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 5
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2022/2023
+*
+* @author Radoslav Peev
+* @idnumber 7MI0600261
+* @compiler GCC
+*
+* <file with helper functions>
+*
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
