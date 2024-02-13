@@ -1,0 +1,31 @@
+name: Update README from DOCX
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y antiword
+        sudo apt-get install -y unrtf
+        pip install docx2txt
+
+    - name: Convert DOCX to TXT
+      run: |
+        docx2txt input.docx > output.txt
+
+    - name: Update README
+      run: |
+        cat output.txt > README.md
+        git add README.md
+        git commit -m "Update README from DOCX" || true
+        git push
